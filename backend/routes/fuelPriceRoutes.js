@@ -1,11 +1,12 @@
 import express from 'express';
 import db from '../db.js'
-
+import cors from 'cors';
 
 const router = express.Router();
 
 //connection to middleware
 router.use(express.json());
+router.use(cors());
 
 //get all fuel prices
 

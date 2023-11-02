@@ -1,6 +1,6 @@
 import express from 'express';
 import db from '../db.js';
-import {cors} from 'cors';
+import cors from 'cors';
 
 const router = express.Router();
 

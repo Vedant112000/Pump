@@ -13,7 +13,9 @@ const AppBar = () => {
         <Container fluid="xl">
           <Row>
           <Col xs={1} sm lg xxl>
-              <Navbar.Brand href="#home" style={{marginTop: 18,}}>Sainam Petroleum Services</Navbar.Brand>
+            <Link to='/'>
+              <Navbar.Brand style={{marginTop: 18,}}>Sainam Petroleum Services</Navbar.Brand>
+              </Link>
           </Col>
           <Col sm={1} md lg xl xxl>
               <Nav className="me-auto" style={{marginTop: 18, margin: 5}}>

@@ -1,11 +1,13 @@
 import express from 'express';
-import db from '../db.js'
+import db from '../db.js';
+import cors from 'cors';
 
 const router = express.Router();
 
 //use middleware
 
 router.use(express.json());
+router.use(cors());
 
 //to get all shift data
 
