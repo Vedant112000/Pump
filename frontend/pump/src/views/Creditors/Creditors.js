@@ -2,12 +2,17 @@ import React, {useState, useEffect} from 'react';
 import Table from 'react-bootstrap/Table';
 import axios from 'axios';
 import {Link} from 'react-router-dom';
+import Button from 'react-bootstrap/Button';
 
 const Creditors = () => {
 
   const [creditor, setCreditors] = useState([]);
 
   useEffect(() => {
+    fetchData();
+  }, [])
+
+  const fetchData = () => {
     axios.get('http://localhost:5000/creditor/get')
     .then((response) => {
       setCreditors(response.data.data);
@@ -15,7 +20,18 @@ const Creditors = () => {
     .catch((error) => {
       console.error(error);
     })
-  }, [])
+  }
+
+
+  const deleteCreditors = (id) => {
+    if(window.confirm('Are you sure you want to delete this Creditor?')){
+      axios.delete(`http://localhost:5000/creditor/delete/${id}`)
+      .then(response => {
+        fetchData();
+        console.log(response.data.Message);
+      })
+    }
+  }
 
 
   return (
@@ -44,7 +60,7 @@ const Creditors = () => {
                   <td>{creditors.name}</td>
                   <td>{creditors.contact_details}</td>
                   <td>{creditors.totalCreditAmount}</td>
-                  <td></td>
+                  <td><Button variant="danger" onClick={() => deleteCreditors(creditors.CreditorID)}>Delete</Button></td>
                 </tr> 
             
           })

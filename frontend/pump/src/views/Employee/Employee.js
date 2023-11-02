@@ -12,6 +12,10 @@ const Employee = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    fetchData();
+  },[])
+
+  const fetchData = () => {
     axios.get('http://localhost:5000/employee/get')
     .then((response) => {
       setEmployee(response.data.data);
@@ -19,7 +23,7 @@ const Employee = () => {
     .catch((error) => {
         console.error(error);
     })
-  },[])
+  }
 
 
 
@@ -30,7 +34,8 @@ const Employee = () => {
       axios.delete(`http://localhost:5000/employee/delete/${id}`)
         .then(response => {
           // Handle a successful response (e.g., update the UI)
-          setEmployee(employees.filter(employee => employee.EmpId !== id));
+          // setEmployee(employees.filter(employee => employee.EmpId !== id));
+          fetchData();
           console.log('Data deleted successfully');
           
           navigate('/employee');

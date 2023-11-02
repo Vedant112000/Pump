@@ -20,9 +20,7 @@ const AppBar = () => {
                 <Link style={{color: "white", textDecoration: "none", margin: 8}} to={'/'}>Dashboard</Link>
                 <Link style={{color: "white", textDecoration: "none", margin: 8}} to={'/employee'}>Employee</Link>
                 <Link style={{color: "white", textDecoration: "none", margin: 8}} to={'/creditors'}>Creditors</Link>
-                <Link style={{color: "white", textDecoration: "none", margin: 8, fontSize: 12
-              
-              }} to={'/users'}>Generate Sales Slip</Link>
+                <Link style={{color: "white", textDecoration: "none", margin: 8, fontSize: 12}} to={'/paySlip'}>Generate Sales Slip</Link>
               </Nav>
           </Col>
           </Row>
