@@ -4,6 +4,7 @@ import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import {Link} from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import AddCreditors from '../Creditors/AddCreditors';
 
 const Employee = () => {
 
@@ -13,7 +14,7 @@ const Employee = () => {
 
   useEffect(() => {
     fetchData();
-  },[])
+  },[AddCreditors])
 
   const fetchData = () => {
     axios.get('http://localhost:5000/employee/get')

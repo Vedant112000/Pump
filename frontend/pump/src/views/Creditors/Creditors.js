@@ -64,7 +64,7 @@ const Creditors = () => {
                   <td>{creditors.totalCreditAmount}</td>
                   <td><Button variant="danger" onClick={() => deleteCreditors(creditors.CreditorID)}>Delete</Button>
                   <Link to={'/editCreditor'}>
-                    <Button variant="primary" style={{marginLeft: 10}}>Amount Received</Button>
+                    <Button variant="primary" style={{marginLeft: 10}}  >Amount Received</Button>
                   </Link>
                   </td>
                 </tr> 

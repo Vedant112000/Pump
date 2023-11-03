@@ -79,31 +79,278 @@ const PaySlip = () => {
 
       }
 
+
+      //logic for the component
+
+      const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({
+          ...formData,
+          [name]: value,
+        });
+      };
+    
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        // You can handle form submission or data processing here.
+        // For example, you can send this data to an API or update your application's state.
+      };
+
+
+      const [formData, setFormData] = useState({
+        EmployeeName: '',
+        shift: '',
+        MpdNo: '',
+        hsd_opening: '',
+        ms_opening: '',
+        hsd_closing: '',
+        ms_closing: '',
+        hsd_price: '',
+        ms_price: '',
+        cashAsPerMeter: '',
+        '2000_cash': '',
+        '500_cash': '',
+        '200_cash': '',
+        '100_cash': '',
+        '50_cash': '',
+        '20_cash': '',
+        '10_cash': '',
+        '5_cash': '',
+        Coins: '',
+        TotalCash: '',
+        PhonePeQR: '',
+        paytmQR: '',
+        paytmCard: '',
+        CreditAmount: '',
+        Collections: '',
+        difference: '',
+      });
+
+      console.log(formData);
+
   return (
-    <div>
+    <div className="container p-3 mt-5">
+          <h3 style={{marginTop: 10, marginBottom: 10}}>Transaction slip</h3>
+          <form onSubmit={handleSubmit} style={{marginTop: 5}}>
+            <div className="form-group">
+              <label>Employee Name:</label>
+              <br />
+              <select className="form-control" name="EmployeeName" value={employee} onChange={handleInputChange}>
+                <option value="">Select the option below</option>
+                {
+                    employee.map((employee) => {
+                      return(
+                      <option key={employee.EmpId} value={employee.Name} name="EmployeeName">{employee.Name}</option>
+                    )
+                  })
+                    
 
-        <Form>
-              <Form.Group className="mb-3" controlId="formBasicEmail">
-                <Form.Label>Email address</Form.Label>
-                <Form.Control type="email" placeholder="Enter email" />
-                <Form.Text className="text-muted">
-                  We'll never share your email with anyone else.
-                </Form.Text>
-              </Form.Group>
+                }
+                
+                {/* Add more options for EmployeeName as needed */}
+              </select>
+            </div>
 
-              <Form.Group className="mb-3" controlId="formBasicPassword">
-                <Form.Label>Password</Form.Label>
-                <Form.Control type="password" placeholder="Password" />
-              </Form.Group>
-              <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                <Form.Check type="checkbox" label="Check me out" />
-              </Form.Group>
-              <Button variant="primary" type="submit">
-                Submit
-              </Button>
-        </Form>
+            <div className="form-group">
+              <label>Shift:</label>
+              <br />
+              <select className="form-control" name="shift" value={shift} onChange={handleInputChange}>
+              <option value="">Select the option below</option>
+              {
+                  shift.map((shift) => {
+                    return(
+                    <option key={shift.idshifts} value={shift.shifts} name="shifts">{shift.shifts}</option>
+                  )
+                })
 
-    </div>
+
+              }
+                
+                {/* Add more options for shift as needed */}
+              </select>
+            </div>
+
+            <div className="form-group">
+              <label>Mpd No:</label>
+              <input
+                type="Number"
+                className="form-control"
+                name="MpdNo"
+                value=""
+                onChange={handleInputChange}
+              />
+            </div>
+
+            {/* Input fields for the remaining parameters */}
+            <div className="form-group">
+              <label>HSD Opening:</label>
+              <input
+                type="text"
+                className="form-control"
+                name="hsd_opening"
+                value={formData.hsd_opening}
+                onChange={handleInputChange}
+              />
+            </div>
+
+            <div className="form-group">
+              <label>MS Opening:</label>
+              <input
+                type="text"
+                className="form-control"
+                name="ms_opening"
+                value={formData.ms_opening}
+                onChange={handleInputChange}
+              />
+            </div>
+
+            <div className="form-group">
+              <label>HSD Closing:</label>
+              <input
+                type="text"
+                className="form-control"
+                name="hsd_closing"
+                value={formData.hsd_closing}
+                onChange={handleInputChange}
+              />
+            </div>
+
+            <div className="form-group">
+              <label>MS Closing:</label>
+              <input
+                type="text"
+                className="form-control"
+                name="ms_closing"
+                value={formData.ms_closing}
+                onChange={handleInputChange}
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Hsd Price:</label>
+              <input
+                type="number"
+                className="form-control"
+                name="hsd_price"
+                value={formData.hsd_price}
+                onChange={handleInputChange}
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Ms Price:</label>
+              <input
+                type="number"
+                className="form-control"
+                name="ms_price"
+                value={formData.ms_price}
+                onChange={handleInputChange}
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Cash As Per Meter:</label>
+              <input
+                type="number"
+                className="form-control"
+                name="cashAsPerMeter"
+                value={formData.cashAsPerMeter}
+                onChange={handleInputChange}
+              />
+            </div>
+
+            <div className="form-group">
+              <label>₹2000 Notes:</label>
+              <input
+                type="number"
+                className="form-control"
+                name="cashAsPerMeter"
+                value={formData}  //note paramter due to number not accepting
+                onChange={handleInputChange}
+              />
+            </div>
+
+            <div className="form-group">
+              <label>₹500 Notes:</label>
+              <input
+                type="number"
+                className="form-control"
+                name="cashAsPerMeter"
+                value={formData}  //note paramter due to number not accepting
+                onChange={handleInputChange}
+              />
+            </div>
+
+            <div className="form-group">
+              <label>₹200 Notes:</label>
+              <input
+                type="number"
+                className="form-control"
+                name="cashAsPerMeter"
+                value={formData}  //note paramter due to number not accepting
+                onChange={handleInputChange}
+              />
+            </div>
+
+            <div className="form-group">
+              <label>₹100 Notes:</label>
+              <input
+                type="number"
+                className="form-control"
+                name="cashAsPerMeter"
+                value={formData}  //note paramter due to number not accepting
+                onChange={handleInputChange}
+              />
+            </div>
+
+            <div className="form-group">
+              <label>₹50 Notes:</label>
+              <input
+                type="number"
+                className="form-control"
+                name="cashAsPerMeter"
+                value={formData}  //note paramter due to number not accepting
+                onChange={handleInputChange}
+              />
+            </div>
+
+            <div className="form-group">
+              <label>₹20 Notes:</label>
+              <input
+                type="number"
+                className="form-control"
+                name="cashAsPerMeter"
+                value={formData}  //note paramter due to number not accepting
+                onChange={handleInputChange}
+              />
+            </div>
+
+            <div className="form-group">
+              <label>₹10 Notes:</label>
+              <input
+                type="number"
+                className="form-control"
+                name="cashAsPerMeter"
+                value={formData}  //note paramter due to number not accepting
+                onChange={handleInputChange}
+              />
+            </div>
+
+            <div className="form-group">
+              <label>₹5 Note/Coin:</label>
+              <input
+                type="number"
+                className="form-control"
+                name="cashAsPerMeter"
+                value={formData}  //note paramter due to number not accepting
+                onChange={handleInputChange}
+              />
+            </div>
+            {/* Add similar input fields for the remaining parameters */}
+            
+            <button type="submit" className="btn btn-primary">Submit</button>
+          </form>
+  </div>
   )
 }
 

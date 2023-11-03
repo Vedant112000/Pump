@@ -74,7 +74,7 @@ const Dashboard = () => {
                 <Card.Body>
                   <Card.Title>{count}</Card.Title>
                   <Card.Text>
-                    Details of how many creditors we are working with.
+                    Total Active Creditors
                   </Card.Text>
                 </Card.Body>
               </Card></Col>
