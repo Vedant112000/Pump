@@ -33,6 +33,8 @@ const Creditors = () => {
     }
   }
 
+  
+
 
   return (
     <div className='Container mt-3 p-5'> 
@@ -60,7 +62,11 @@ const Creditors = () => {
                   <td>{creditors.name}</td>
                   <td>{creditors.contact_details}</td>
                   <td>{creditors.totalCreditAmount}</td>
-                  <td><Button variant="danger" onClick={() => deleteCreditors(creditors.CreditorID)}>Delete</Button></td>
+                  <td><Button variant="danger" onClick={() => deleteCreditors(creditors.CreditorID)}>Delete</Button>
+                  <Link to={'/editCreditor'}>
+                    <Button variant="primary" style={{marginLeft: 10}}>Amount Received</Button>
+                  </Link>
+                  </td>
                 </tr> 
             
           })

@@ -7,6 +7,7 @@ import Creditors from './views/Creditors/Creditors';
 import AddCreditors from './views/Creditors/AddCreditors';
 import AddEmployee from './views/Employee/AddEmployee';
 import PaySlip from './views/PaySlip/PaySlip';
+import EditCreditor from './views/Creditors/EditCreditor';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path='/addCreditor' Component={AddCreditors} />
         <Route path='/addEmployee' Component={AddEmployee}/>
         <Route path='/paySlip' Component={PaySlip}/>
+        <Route path='/editCreditor' Component={EditCreditor}/>
     </Routes>
     </>
   );
