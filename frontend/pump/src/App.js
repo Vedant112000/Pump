@@ -2,6 +2,8 @@ import './App.css';
 import AppBar from './views/AppBar';
 import Dashboard from './views/Dashboard';
 import { Routes, Route } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+  import 'react-toastify/dist/ReactToastify.css';
 import Employee from './views/Employee/Employee';
 import Creditors from './views/Creditors/Creditors';
 import AddCreditors from './views/Creditors/AddCreditors';
@@ -14,8 +16,9 @@ function App() {
     <>
     <div className="App">
       <AppBar />
+      
     </div>
-
+    <ToastContainer position="top-center" />
     <Routes>
         <Route path='/' Component={Dashboard} />
         <Route path='/employee' Component={Employee} />
@@ -23,7 +26,7 @@ function App() {
         <Route path='/addCreditor' Component={AddCreditors} />
         <Route path='/addEmployee' Component={AddEmployee}/>
         <Route path='/paySlip' Component={PaySlip}/>
-        <Route path='/editCreditor' Component={EditCreditor}/>
+        <Route path='/editCreditor/:id' Component={EditCreditor}/>
     </Routes>
     </>
   );

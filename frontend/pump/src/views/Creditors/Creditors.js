@@ -3,10 +3,15 @@ import Table from 'react-bootstrap/Table';
 import axios from 'axios';
 import {Link} from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
+import {toast} from 'react-toastify';
+import { FaPlus } from "@react-icons/all-files/fa/FaPlus";
+import { FaTrash } from "@react-icons/all-files/fa/FaTrash";
+import { FaPenNib } from "@react-icons/all-files/fa/FaPenNib";
 
 const Creditors = () => {
 
-  const [creditor, setCreditors] = useState([]);
+  const [creditors, setCreditors] = useState([]);
+  
 
   useEffect(() => {
     fetchData();
@@ -28,12 +33,11 @@ const Creditors = () => {
       axios.delete(`http://localhost:5000/creditor/delete/${id}`)
       .then(response => {
         fetchData();
+        toast.error("Creditor Deleted Successfully");
         console.log(response.data.Message);
       })
     }
   }
-
-  
 
 
   return (
@@ -41,7 +45,7 @@ const Creditors = () => {
     <h2 className='mt-3'>Creditor Details</h2>
       <Link to='/addCreditor' style={{textDecoration: 'none', color: 'white'}}>
 
-        <button type="button" class="btn btn-primary mt-2"><i class="bi bi-plus-square"></i>Add Creditor</button>
+        <button type="button" class="btn btn-primary mt-2"><FaPlus style={{marginRight: 5, padding: 2}} />Add Creditor</button>
 
       </Link>
       
@@ -56,15 +60,17 @@ const Creditors = () => {
           <th>Actions</th>
         </tr>
         {
-          creditor.map((creditors, index) => {
+          creditors.map((creditors, index) => {
             return <tr key={index}>
                   <td>{index+1}</td>
                   <td>{creditors.name}</td>
                   <td>{creditors.contact_details}</td>
                   <td>{creditors.totalCreditAmount}</td>
-                  <td><Button variant="danger" onClick={() => deleteCreditors(creditors.CreditorID)}>Delete</Button>
-                  <Link to={'/editCreditor'}>
-                    <Button variant="primary" style={{marginLeft: 10}}  >Amount Received</Button>
+                  <td><Button variant="danger" onClick={() => deleteCreditors(creditors.CreditorID)}><FaTrash /></Button>
+                  <Link to={`/editCreditor/${creditors.CreditorID}`}>
+
+                    <Button variant="primary" style={{marginLeft: 10}} ><FaPenNib /></Button>
+                    
                   </Link>
                   </td>
                 </tr> 

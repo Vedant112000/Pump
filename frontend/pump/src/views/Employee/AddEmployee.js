@@ -3,6 +3,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import axios from 'axios';
 import {useNavigate} from 'react-router-dom';
+import {toast} from 'react-toastify';
 
 const AddEmployee = () => {
 
@@ -27,8 +28,7 @@ const AddEmployee = () => {
     e.preventDefault();
 
     sendRequest(formData);
-    
-    navigate('/employee');
+    toast.success("Successfully added Employee");
   }
   
 
@@ -42,6 +42,7 @@ const AddEmployee = () => {
     .catch(error => {
       console.error('Error:', error);
     });
+    navigate('/employee');
   }else{
     navigate('/employee');
   }

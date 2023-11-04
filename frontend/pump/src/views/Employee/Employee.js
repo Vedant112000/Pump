@@ -5,6 +5,7 @@ import Button from 'react-bootstrap/Button';
 import {Link} from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import AddCreditors from '../Creditors/AddCreditors';
+import {toast} from 'react-toastify';
 
 const Employee = () => {
 
@@ -37,7 +38,7 @@ const Employee = () => {
           // Handle a successful response (e.g., update the UI)
           // setEmployee(employees.filter(employee => employee.EmpId !== id));
           fetchData();
-          console.log('Data deleted successfully');
+          toast.error("Employee Deleted Successfully");
           
           navigate('/employee');
         })

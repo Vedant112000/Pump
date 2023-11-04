@@ -3,6 +3,7 @@ import axios from 'axios';
 import {useNavigate} from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import {toast} from 'react-toastify';
 
 
 const AddCreditors = () => {
@@ -43,6 +44,8 @@ const AddCreditors = () => {
       .catch(error => {
         console.error('Error:', error);
       });
+
+      toast.success('Successfully added the creditor');
   };
 
   return (
