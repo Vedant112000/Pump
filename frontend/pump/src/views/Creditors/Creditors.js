@@ -27,10 +27,6 @@ const Creditors = () => {
     })
   }
 
-  useEffect(() => {
-
-  },[creditors])
-
 
   const deleteCreditors = (id) => {
     if(window.confirm('Are you sure you want to delete this Creditor?')){

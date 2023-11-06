@@ -76,7 +76,7 @@ const EditCreditor = () => {
   }
 
   const sendRequest =  (fidata) => {
-    if(window.confirm("Are you sure that you received the amount from "+creditor.name)){
+    if(window.confirm("Are you sure that you received the amount from "+creditor.name+" ?")){
        axios.put(`http://localhost:5000/creditor/update/${id}`,fidata)
       .then(response => {
         console.log(response.data);
@@ -101,7 +101,7 @@ const EditCreditor = () => {
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="formBasicContact">
-            <Form.Label>Contact Details: </Form.Label>
+            <Form.Label>Current Credit Amount: </Form.Label>
             <Form.Control type="Number" name='totalCreditAmount' value={formData.totalCreditAmount} placeholder="Total Credit Amount"  readOnly/>
           </Form.Group>
 

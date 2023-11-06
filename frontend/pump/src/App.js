@@ -10,6 +10,7 @@ import AddCreditors from './views/Creditors/AddCreditors';
 import AddEmployee from './views/Employee/AddEmployee';
 import PaySlip from './views/PaySlip/PaySlip';
 import EditCreditor from './views/Creditors/EditCreditor';
+import login from './views/login';
 
 function App() {
   return (
@@ -20,7 +21,8 @@ function App() {
     </div>
     <ToastContainer position="top-center" />
     <Routes>
-        <Route path='/' Component={Dashboard} />
+        <Route path='/' Component={login}></Route>
+        <Route path='/Dashboard' Component={Dashboard} />
         <Route path='/employee' Component={Employee} />
         <Route path='/creditors' Component={Creditors} />
         <Route path='/addCreditor' Component={AddCreditors} />
