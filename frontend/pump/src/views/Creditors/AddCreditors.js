@@ -56,12 +56,12 @@ const AddCreditors = () => {
     <Form onSubmit={handleSubmit}>
           <Form.Group className="mb-3" controlId="formBasicName">
             <Form.Label>Creditor Name: </Form.Label>
-            <Form.Control type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Enter Employee Name" />
+            <Form.Control type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Enter Creditor Name" />
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="formBasicContact">
             <Form.Label>Contact Details: </Form.Label>
-            <Form.Control type="Number" name='contact_details' value={formData.contact_details} onChange={handleChange} placeholder="Enter Employee mobile no." />
+            <Form.Control type="Number" name='contact_details' value={formData.contact_details} onChange={handleChange} placeholder="Enter Creditor Mobile No." />
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="formBasicCredit">

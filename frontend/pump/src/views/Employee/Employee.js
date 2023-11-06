@@ -6,6 +6,8 @@ import {Link} from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import AddCreditors from '../Creditors/AddCreditors';
 import {toast} from 'react-toastify';
+import { FaTrash } from "@react-icons/all-files/fa/FaTrash";
+import { FaPlus } from "@react-icons/all-files/fa/FaPlus";
 
 const Employee = () => {
 
@@ -58,7 +60,7 @@ const Employee = () => {
       <div className='container p-3 mt-5'>
           <h3 className='mt-3'>Employee Data</h3>
 
-          <Link to='/addEmployee' style={{textDecoration: 'none', color: 'white'}}><Button variant="primary" className='mt-3'>Add Employee</Button></Link>
+          <Link to='/addEmployee' style={{textDecoration: 'none', color: 'white'}}><Button variant="primary" className='mt-3'><FaPlus style={{marginRight: 5, padding: 2}} />Add Employee</Button></Link>
           
           <Table striped bordered hover className='mt-3'>
       <thead>
@@ -77,7 +79,7 @@ const Employee = () => {
               <td>{index + 1}</td>
               <td>{employee.Name}</td>
               <td>{employee.Contact_Details}</td>
-              <td><Button variant="danger" onClick={() => deleteEmployee(employee.EmpId)}>Delete</Button></td>
+              <td><Button variant="danger" onClick={() => deleteEmployee(employee.EmpId)}><FaTrash /></Button></td>
             </tr>
             })
         }
