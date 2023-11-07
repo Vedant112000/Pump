@@ -1,24 +1,57 @@
 import React, { useEffect, useState } from 'react';
+import './PaySlip.css';
 import axios from 'axios';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
 
 const PaySlip = () => {
 
 
   //Renders all the components at the time of mount
   useEffect(() => {
-    fetchEmployee();
-    fetchCreditor();
-    fetchClosing();
-    fetchFuelPrices();
-    fetchShift();
-  }, [])
+    async function fetchData() {
+      await fetchEmployee();
+      await fetchCreditor();
+      await fetchClosing();
+      await fetchMsPrices();
+      await fetchHsdPrices();
+      await fetchShift();
+    }
+    fetchData();
+  }, []);
+
+  const [formData, setFormData] = useState({
+    EmployeeName: '',
+    shift: '',
+    MpdNo: '',
+    hsd_opening: 0,
+    ms_opening: 0,
+    hsd_closing: 0,
+    ms_closing: 0,
+    hsd_price: 0,
+    ms_price: 0,
+    cashAsPerMeter: 0,
+    '2000_cash': '',
+    '500_cash': '',
+    '200_cash': '',
+    '100_cash': '',
+    '50_cash': '',
+    '20_cash': '',
+    '10_cash': '',
+    '5_cash': '',
+    Coins: '',
+    TotalCash: '',
+    PhonePeQR: '',
+    paytmQR: '',
+    paytmCard: '',
+    CreditAmount: '',
+    Collections: '',
+    difference: '',
+  });
+  
 
   //To Fetch All employees data for payslip creation
   const [employee, setEmployee] = useState([]);
-  const fetchEmployee = () => {
-    axios.get('http://localhost:5000/employee/get')
+  const fetchEmployee = async () => {
+    await axios.get('http://localhost:5000/employee/get')
     .then(response => {
       setEmployee(response.data.data);
     })
@@ -29,8 +62,8 @@ const PaySlip = () => {
 
   //To Fetch All creditors data
     const[creditors, setCreditors] = useState([]);
-    const fetchCreditor = () => {
-      axios.get('http://localhost:5000/creditor/get')
+    const fetchCreditor = async () => {
+      await axios.get('http://localhost:5000/creditor/get')
       .then(response => {
         setCreditors(response.data.data);
       })
@@ -42,10 +75,11 @@ const PaySlip = () => {
 
     //To Fetch all the individual closing of mpd
       const[closing, setClosing] = useState([]);
-      const fetchClosing = () => {
-        axios.get('http://localhost:5000/closing/get')
+      const fetchClosing = async () => {
+        await axios.get('http://localhost:5000/closing/get')
         .then(response => {
-          setClosing(response.data.data);
+          setClosing(response.data.Data);
+          console.log(response.data.Data);
         })
         .catch(error => {
           console.error(error);
@@ -54,22 +88,44 @@ const PaySlip = () => {
 
       //To Fetch the fuel prices
 
-      const [fuelPrices, setFuelPrices] = useState([]);
+      const [msPrices, setMsPrices] = useState([]);
       
-      const fetchFuelPrices= () => {
-        axios.get('http://localhost:5000/fuel/get')
-        .then(response => {
-          setFuelPrices(response.data.data);
-        })
-        .catch(error => {
+      const fetchMsPrices= async () => {
+        try {
+          const response = await axios.get('http://localhost:5000/fuel/get/ms');
+          const msPrice = response.data.data[0].ms_price;
+          setMsPrices(msPrice);
+      
+          setFormData(prevData => ({
+            ...prevData,
+            ms_price: msPrice
+          }));
+        } catch (error) {
           console.error(error);
-        })
+        }
+      }
+
+      const [hsdPrices, setHsdPrices] = useState([]);
+      
+      const fetchHsdPrices = async () => {
+        try {
+          const response = await axios.get('http://localhost:5000/fuel/get/hsd');
+          const hsdPrice = response.data.data[0].hsd_price;
+          setHsdPrices(hsdPrice);
+      
+          setFormData(prevData => ({
+            ...prevData,
+            hsd_price: hsdPrice
+          }));
+        } catch (error) {
+          console.error(error);
+        }
       }
 
       //to fetch the shift of employees so that we can evaluate if it is pay slip of day or night
       const [shift, setShift] = useState([]);
-      const fetchShift = () => {
-        axios.get('http://localhost:5000/shifts/get')
+      const fetchShift = async () => {
+        await axios.get('http://localhost:5000/shifts/get')
         .then(response => {
           setShift(response.data.data);
         })
@@ -95,37 +151,24 @@ const PaySlip = () => {
         // You can handle form submission or data processing here.
         // For example, you can send this data to an API or update your application's state.
       };
+      
+      const [cashMeter, setCashMeter] = useState();
 
+      const cashAsPerMeter = () => {
 
-      const [formData, setFormData] = useState({
-        EmployeeName: '',
-        shift: '',
-        MpdNo: '',
-        hsd_opening: '',
-        ms_opening: '',
-        hsd_closing: '',
-        ms_closing: '',
-        hsd_price: '',
-        ms_price: '',
-        cashAsPerMeter: '',
-        '2000_cash': '',
-        '500_cash': '',
-        '200_cash': '',
-        '100_cash': '',
-        '50_cash': '',
-        '20_cash': '',
-        '10_cash': '',
-        '5_cash': '',
-        Coins: '',
-        TotalCash: '',
-        PhonePeQR: '',
-        paytmQR: '',
-        paytmCard: '',
-        CreditAmount: '',
-        Collections: '',
-        difference: '',
-      });
+        const msPrice = formData.ms_price;
+        const hsdPrice = formData.hsd_price;
+        const hsdclosing = formData.hsd_closing;
+        const msclosing = formData.ms_closing;
+        const hsdopening = formData.hsd_opening;
+        const msopening = formData.ms_opening;
 
+        const cashGot = (((hsdclosing - hsdopening) * hsdPrice) + ((msclosing - msopening) * msPrice));
+        
+        setFormData({...formData, cashAsPerMeter: cashGot});
+        
+      }
+      
       console.log(formData);
 
   return (
@@ -135,8 +178,8 @@ const PaySlip = () => {
             <div className="form-group">
               <label>Employee Name:</label>
               <br />
-              <select className="form-control" name="EmployeeName" value={employee} onChange={handleInputChange}>
-                <option value="">Select the option below</option>
+              <select className="form-control" name='EmployeeName' value={formData.Name} onChange={handleInputChange}>
+                <option >Select the option below</option>
                 {
                     employee.map((employee) => {
                       return(
@@ -154,8 +197,8 @@ const PaySlip = () => {
             <div className="form-group">
               <label>Shift:</label>
               <br />
-              <select className="form-control" name="shift" value={shift} onChange={handleInputChange}>
-              <option value="">Select the option below</option>
+              <select className="form-control" name="shift" value={formData.shift} onChange={handleInputChange}>
+              <option>Select the option below</option>
               {
                   shift.map((shift) => {
                     return(
@@ -172,35 +215,68 @@ const PaySlip = () => {
 
             <div className="form-group">
               <label>Mpd No:</label>
-              <input
-                type="Number"
-                className="form-control"
-                name="MpdNo"
-                value=""
-                onChange={handleInputChange}
-              />
+              <select className="form-control" name="MpdNo" value={closing.mpd_no} onChange={handleInputChange}>
+                
+              <option>Select the option below</option>
+
+              {
+                  closing.map((closing) => {
+                    return(
+                    <option key={closing.ClosingID} value={closing.mpd_no} name="MpdNo">{closing.mpd_no}</option>
+                  )
+                })
+
+
+              }
+                
+                {/* Add more options for shift as needed */}
+              </select>
             </div>
 
             {/* Input fields for the remaining parameters */}
             <div className="form-group">
+              <label>Select the Mpd for Hsd opening (LAST CLOSING):</label>
+              <select className="form-control" name="hsd_opening" value={closing.hsd_closing} onChange={handleInputChange}>
+              <option>Select the option below</option>
+
+              {
+                  closing.map((closing) => {
+                    return(
+                    <option key={closing.ClosingID} value={closing.hsd_closing} name="MpdNo">{closing.mpd_no}</option>
+                  )
+                })
+
+
+              }
+              </select>
               <label>HSD Opening:</label>
               <input
                 type="text"
                 className="form-control"
-                name="hsd_opening"
                 value={formData.hsd_opening}
-                onChange={handleInputChange}
               />
             </div>
 
             <div className="form-group">
+              <label>Select the Mpd for MS opening (LAST CLOSING):</label>
+              <select className="form-control" name="ms_opening" value={closing.ms_closing} onChange={handleInputChange}>
+              <option>Select the option below</option>
+
+              {
+                  closing.map((closing) => {
+                    return(
+                    <option key={closing.ClosingID} value={closing.ms_closing} name="MpdNo">{closing.mpd_no}</option>
+                  )
+                })
+
+
+              }
+              </select>
               <label>MS Opening:</label>
               <input
                 type="text"
                 className="form-control"
-                name="ms_opening"
                 value={formData.ms_opening}
-                onChange={handleInputChange}
               />
             </div>
 
@@ -233,7 +309,7 @@ const PaySlip = () => {
                 className="form-control"
                 name="hsd_price"
                 value={formData.hsd_price}
-                onChange={handleInputChange}
+                readOnly
               />
             </div>
 
@@ -243,8 +319,7 @@ const PaySlip = () => {
                 type="number"
                 className="form-control"
                 name="ms_price"
-                value={formData.ms_price}
-                onChange={handleInputChange}
+                value={formData.ms_price} readOnly
               />
             </div>
 
@@ -255,7 +330,7 @@ const PaySlip = () => {
                 className="form-control"
                 name="cashAsPerMeter"
                 value={formData.cashAsPerMeter}
-                onChange={handleInputChange}
+                onClick={cashAsPerMeter}
               />
             </div>
 
