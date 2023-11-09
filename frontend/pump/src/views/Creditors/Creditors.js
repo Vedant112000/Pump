@@ -11,16 +11,18 @@ import { FaPenNib } from "@react-icons/all-files/fa/FaPenNib";
 const Creditors = () => {
 
   const [creditors, setCreditors] = useState([]);
-  
+  const [count, setCount] = useState(0);
 
   useEffect(() => {
     fetchData();
   }, [])
 
+
   const fetchData = () => {
     axios.get('http://localhost:5000/creditor/get')
     .then((response) => {
       setCreditors(response.data.data);
+      setCount(response.data.count);
     })
     .catch((error) => {
       console.error(error);
@@ -60,6 +62,9 @@ const Creditors = () => {
           <th>Actions</th>
         </tr>
         {
+
+          (count === 0) ? (<h3>There is no creditor at the moment.</h3>)
+          :
           creditors.map((creditors, index) => {
             return <tr key={index}>
                   <td>{index+1}</td>
@@ -70,6 +75,11 @@ const Creditors = () => {
                   <Link to={`/editCreditor/${creditors.CreditorID}`}>
 
                     <Button variant="primary" style={{marginLeft: 10}} ><FaPenNib /></Button>
+                    
+                  </Link>
+                  <Link to={`/addCreditorAmount/${creditors.CreditorID}`}>
+
+                    <Button variant="warning" style={{marginLeft: 10}} ><FaPlus /></Button>
                     
                   </Link>
                   </td>

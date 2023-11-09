@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import './PaySlip.css';
 import axios from 'axios';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 const PaySlip = () => {
 
+  const navigate = useNavigate();
 
   //Renders all the components at the time of mount
   useEffect(() => {
@@ -29,22 +32,22 @@ const PaySlip = () => {
     hsd_price: 0,
     ms_price: 0,
     cashAsPerMeter: 0,
-    '2000_cash': '',
-    '500_cash': '',
-    '200_cash': '',
-    '100_cash': '',
-    '50_cash': '',
-    '20_cash': '',
-    '10_cash': '',
-    '5_cash': '',
-    Coins: '',
-    TotalCash: '',
-    PhonePeQR: '',
-    paytmQR: '',
-    paytmCard: '',
-    CreditAmount: '',
-    Collections: '',
-    difference: '',
+    twoThousand_cash: 0,
+    fiveHun_cash: 0,
+    twoHun_cash: 0,
+    oneHun_cash: 0,
+    fifty_cash: 0,
+    twenty_cash: 0,
+    ten_cash: 0,
+    five_cash: 0,
+    Coins: 0,
+    totalCash: 0,
+    PhonePeQR: 0,
+    paytmQR: 0,
+    paytmCard: 0,
+    CreditAmount: 0,
+    Collections: 0,
+    difference: 0,
   });
   
 
@@ -135,6 +138,7 @@ const PaySlip = () => {
 
       }
 
+      
 
       //logic for the component
 
@@ -145,14 +149,43 @@ const PaySlip = () => {
           [name]: value,
         });
       };
+
     
       const handleSubmit = (e) => {
         e.preventDefault();
         // You can handle form submission or data processing here.
         // For example, you can send this data to an API or update your application's state.
+        sendRequest(formData);
+        // Update the latest closing data
+        const creditorId = formData.MpdNo; // Assuming you have CreditorID in your form data
+        const hsdClosing = formData.hsd_closing;
+        const msClosing = formData.ms_closing;
+        updateLatestClosing(creditorId, hsdClosing, msClosing);
+
+        toast.success("Added Transaction Slip Successfully");
+        navigate("/Dashboard");
+       
       };
       
-      const [cashMeter, setCashMeter] = useState();
+      const sendRequest = async (data) => {
+        try{
+          if(window.confirm("are you sure you want to create this slip check once before submitting")){
+          const response = await axios.post('http://localhost:5000/collections/addCollection', data);
+          console.log(response);
+          }
+          else{
+            navigate("/");
+          }
+        }catch(error){
+          console.error(error);
+          toast.error("Error occured while operation");
+          navigate("/Dashboard");
+        }
+      
+      
+        
+      }
+      
 
       const cashAsPerMeter = () => {
 
@@ -168,8 +201,53 @@ const PaySlip = () => {
         setFormData({...formData, cashAsPerMeter: cashGot});
         
       }
+
+      const getTotalCash = () => {
+
+          const TotalCash = ((formData.twoThousand_cash * 2000) + (formData.fiveHun_cash * 500) + (formData.twoHun_cash * 200) + (formData.oneHun_cash * 100) + (formData.fifty_cash * 50) + (formData.twenty_cash * 20) + (formData.ten_cash * 10) + (formData.five_cash * 5) + (formData.Coins * 1));
+          setFormData({...formData, totalCash: TotalCash});
+          
+      }
+
+      const[onlineCollection, setOnlineCollection] = useState(0);
+
+      const getOnlineCollections = () => {
+          const oncollect = (formData.PhonePeQR * 1) + (formData.paytmQR * 1) + (formData.paytmCard * 1);
+          setOnlineCollection(oncollect);
+      }
+
+      const calcCollections = () => {
+        const totalCollection = (formData.totalCash * 1) + (onlineCollection * 1);
+        setFormData({...formData, Collections: totalCollection});
+      }
+
+      const getDifference = () => {
+        const diff = (formData.Collections * 1 ) - (formData.cashAsPerMeter * 1);
+        const diff1 = diff.toFixed(2);
+        setFormData({...formData, difference: diff1});
+      }
       
+      //setting latest closing for the specific mpd for next opening 
+      
+      const updateLatestClosing = async (creditorId, hsdClosing, msClosing) => {
+        try {
+          // Create an object with the data you want to update
+          const latestClosingData = {
+            hsd_closing: hsdClosing,
+            ms_closing: msClosing,
+          };
+      
+          // Make a POST request to your API endpoint to update the latest closing data
+          const response = await axios.put(`http://localhost:5000/closing/update/${creditorId}`, latestClosingData);
+      
+          console.log(response); // You can handle the response as needed
+        } catch (error) {
+          console.error(error);
+        }
+      };
+
       console.log(formData);
+      
 
   return (
     <div className="container p-3 mt-5">
@@ -215,14 +293,14 @@ const PaySlip = () => {
 
             <div className="form-group">
               <label>Mpd No:</label>
-              <select className="form-control" name="MpdNo" value={closing.mpd_no} onChange={handleInputChange}>
+              <select className="form-control" name="MpdNo" value={closing.ClosingID} onChange={handleInputChange}>
                 
               <option>Select the option below</option>
 
               {
                   closing.map((closing) => {
                     return(
-                    <option key={closing.ClosingID} value={closing.mpd_no} name="MpdNo">{closing.mpd_no}</option>
+                    <option key={closing.ClosingID} value={closing.ClosingID} name="MpdNo">{closing.mpd_no}</option>
                   )
                 })
 
@@ -288,6 +366,7 @@ const PaySlip = () => {
                 name="hsd_closing"
                 value={formData.hsd_closing}
                 onChange={handleInputChange}
+                onFocus={(e) => e.target.addEventListener("wheel", function (e) { e.preventDefault() }, { passive: false })}
               />
             </div>
 
@@ -299,6 +378,7 @@ const PaySlip = () => {
                 name="ms_closing"
                 value={formData.ms_closing}
                 onChange={handleInputChange}
+                onFocus={(e) => e.target.addEventListener("wheel", function (e) { e.preventDefault() }, { passive: false })}
               />
             </div>
 
@@ -331,6 +411,7 @@ const PaySlip = () => {
                 name="cashAsPerMeter"
                 value={formData.cashAsPerMeter}
                 onClick={cashAsPerMeter}
+                readonly
               />
             </div>
 
@@ -339,9 +420,10 @@ const PaySlip = () => {
               <input
                 type="number"
                 className="form-control"
-                name="cashAsPerMeter"
-                value={formData}  //note paramter due to number not accepting
+                name="twoThousand_cash"
+                value={formData.twoThousand_cash}  
                 onChange={handleInputChange}
+                onFocus={(e) => e.target.addEventListener("wheel", function (e) { e.preventDefault() }, { passive: false })}
               />
             </div>
 
@@ -350,9 +432,10 @@ const PaySlip = () => {
               <input
                 type="number"
                 className="form-control"
-                name="cashAsPerMeter"
-                value={formData}  //note paramter due to number not accepting
+                name="fiveHun_cash"
+                value={formData.fiveHun_cash}  
                 onChange={handleInputChange}
+                onFocus={(e) => e.target.addEventListener("wheel", function (e) { e.preventDefault() }, { passive: false })}
               />
             </div>
 
@@ -361,9 +444,10 @@ const PaySlip = () => {
               <input
                 type="number"
                 className="form-control"
-                name="cashAsPerMeter"
-                value={formData}  //note paramter due to number not accepting
+                name="twoHun_cash"
+                value={formData.twoHun_cash}  
                 onChange={handleInputChange}
+                onFocus={(e) => e.target.addEventListener("wheel", function (e) { e.preventDefault() }, { passive: false })}
               />
             </div>
 
@@ -372,9 +456,10 @@ const PaySlip = () => {
               <input
                 type="number"
                 className="form-control"
-                name="cashAsPerMeter"
-                value={formData}  //note paramter due to number not accepting
+                name="oneHun_cash"
+                value={formData.oneHun_cash}  
                 onChange={handleInputChange}
+                onFocus={(e) => e.target.addEventListener("wheel", function (e) { e.preventDefault() }, { passive: false })}
               />
             </div>
 
@@ -383,9 +468,10 @@ const PaySlip = () => {
               <input
                 type="number"
                 className="form-control"
-                name="cashAsPerMeter"
-                value={formData}  //note paramter due to number not accepting
+                name="fifty_cash"
+                value={formData.fifty_cash}  
                 onChange={handleInputChange}
+                onFocus={(e) => e.target.addEventListener("wheel", function (e) { e.preventDefault() }, { passive: false })}
               />
             </div>
 
@@ -394,9 +480,10 @@ const PaySlip = () => {
               <input
                 type="number"
                 className="form-control"
-                name="cashAsPerMeter"
-                value={formData}  //note paramter due to number not accepting
+                name="twenty_cash"
+                value={formData.twenty_cash}  
                 onChange={handleInputChange}
+                onFocus={(e) => e.target.addEventListener("wheel", function (e) { e.preventDefault() }, { passive: false })}
               />
             </div>
 
@@ -405,9 +492,10 @@ const PaySlip = () => {
               <input
                 type="number"
                 className="form-control"
-                name="cashAsPerMeter"
-                value={formData}  //note paramter due to number not accepting
+                name="ten_cash"
+                value={formData.ten_cash}  
                 onChange={handleInputChange}
+                onFocus={(e) => e.target.addEventListener("wheel", function (e) { e.preventDefault() }, { passive: false })}
               />
             </div>
 
@@ -416,14 +504,121 @@ const PaySlip = () => {
               <input
                 type="number"
                 className="form-control"
-                name="cashAsPerMeter"
-                value={formData}  //note paramter due to number not accepting
+                name="five_cash"
+                value={formData.five_cash}  
+                onChange={handleInputChange}
+                onFocus={(e) => e.target.addEventListener("wheel", function (e) { e.preventDefault() }, { passive: false })}
+              />
+            </div>
+            
+
+            <div className="form-group">
+              <label>Coins:</label>
+              <input
+                type="number"
+                className="form-control"
+                name="Coins"
+                value={formData.Coins}  
+                onChange={handleInputChange}
+                onFocus={(e) => e.target.addEventListener("wheel", function (e) { e.preventDefault() }, { passive: false })}
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Total Cash:</label>
+              <input
+                type="number"
+                className="form-control"
+                name="TotalCash"
+                value={formData.totalCash}  
+                onClick={getTotalCash} readOnly
+              />
+            </div>
+
+            <div className="form-group">
+              <label>PhonePe(QR):</label>
+              <input
+                type="number"
+                className="form-control"
+                name="PhonePeQR"
+                value={formData.PhonePeQR}  
+                onChange={handleInputChange}
+                onFocus={(e) => e.target.addEventListener("wheel", function (e) { e.preventDefault() }, { passive: false })}
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Paytm(QR):</label>
+              <input
+                type="number"
+                className="form-control"
+                name="paytmQR"
+                value={formData.paytmQR}  
+                onChange={handleInputChange}
+                onFocus={(e) => e.target.addEventListener("wheel", function (e) { e.preventDefault() }, { passive: false })}
+              />
+            </div>
+            
+
+            <div className="form-group">
+              <label>Paytm Card:</label>
+              <input
+                type="number"
+                className="form-control"
+                name="paytmCard"
+                value={formData.paytmCard}  
+                onChange={handleInputChange}
+                onFocus={(e) => e.target.addEventListener("wheel", function (e) { e.preventDefault() }, { passive: false })}
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Total online Collections:</label>
+              <input
+                type="number"
+                className="form-control"
+                value={onlineCollection}  
+                onClick={getOnlineCollections}
+                readOnly
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Collections:</label>
+              <input
+                type="number"
+                className="form-control"
+                name="Collections"
+                value={formData.Collections}  
+                onClick={calcCollections}
+                readOnly
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Difference:</label>
+              <input
+                type="number"
+                className="form-control"
+                name="difference"
+                value={formData.difference}  
+                onClick={getDifference}
+                readOnly
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Total Credit Amount:</label>
+              <input
+                type="number"
+                className="form-control"
+                name="CreditAmount"
+                value={formData.CreditAmount}  
                 onChange={handleInputChange}
               />
             </div>
-            {/* Add similar input fields for the remaining parameters */}
-            
-            <button type="submit" className="btn btn-primary">Submit</button>
+
+            <button type="submit" id='paySlipSubmitBtn' className="btn btn-primary" style={{marginTop: 15}}>Submit</button>
           </form>
   </div>
   )
