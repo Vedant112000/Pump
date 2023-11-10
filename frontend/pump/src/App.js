@@ -12,6 +12,7 @@ import PaySlip from './views/PaySlip/PaySlip';
 import EditCreditor from './views/Creditors/EditCreditor';
 import login from './views/login';
 import AddCreditorAmount from './views/Creditors/AddCreditorAmount';
+import TransactionReport from './views/report/TransactionReport';
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
         <Route path='/paySlip' Component={PaySlip}/>
         <Route path='/editCreditor/:id' Component={EditCreditor}/>
         <Route path='/addCreditorAmount/:id' Component={AddCreditorAmount}/>
+        <Route path='/transactionReport' Component={TransactionReport}/>
     </Routes>
     </>
   );
