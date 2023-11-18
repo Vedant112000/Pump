@@ -51,6 +51,55 @@ router.get("/getCollection", (req, res) => {
   })
 })
 
+//to get the latest transaction Id
+
+router.get("/getLatestTransaction", (req, res) => {
+
+  const getLatest = "SELECT TransactionId FROM collectionstransaction ORDER BY TransactionId DESC LIMIT 1";
+
+  db.query(getLatest, (err, result) => {
+    if(err){
+      res.status(400).json({"Message": err})
+    }else{
+      res.status(200).json({"data": result});
+    }
+  })
+})
+
+//to join the data of collectionTransaction and creditor_transacation
+
+router.get("/allTransactionDetails/:transactionId", (req, res) => {
+
+  const {transactionId} = req.params;
+
+  const getAllDetails = "SELECT dateTime, MpdNo, EmployeeName, shift, creditAmount, creditor, FuelAmount, Litres, FuelType FROM collectionstransaction LEFT JOIN creditor_transaction ON collectionstransaction.TransactionId = creditor_transaction.TransactionId WHERE collectionstransaction.TransactionId = ?";
+
+  db.query(getAllDetails, transactionId, (err, result) => {
+    if(err){
+      res.status(400).json(err);
+    }else{
+      res.status(200).json({"data": result});
+    }
+  })
+
+})
+
+//to post all the data got from user into the creditor transaction table
+
+router.post("/addCreditorDetails", (req,res) => {
+  const {TransactionId, creditor, FuelAmount, Litres, FuelType} = req.body;
+
+  const addDetails = "Insert into creditor_transaction (TransactionId, creditor, FuelAmount, Litres, FuelType) values (?,?,?,?,?)";
+
+  db.query(addDetails, [TransactionId, creditor, FuelAmount, Litres, FuelType], (err,result) => {
+    if(err){
+      res.status(400).json(err)
+    }else{
+      res.status(200).json({"Message": "successfully added the creditor details for the transaction."})
+    }
+  })
+
+})
 
 //get transaction according to dates   => convert it into only date search
 
