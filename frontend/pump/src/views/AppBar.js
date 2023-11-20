@@ -6,7 +6,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { Link } from 'react-router-dom';
 import { useAuth0 } from "@auth0/auth0-react";
-import Button from 'react-bootstrap/Button';
+
 
 const AppBar = () => {
 

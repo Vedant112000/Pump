@@ -11,6 +11,8 @@ const generatePDF = transactions => {
 
   const today = new Date().toISOString().split("T")[0];
   let isFirstPage = true;
+  let totalCashAsPerMeter = 0;
+  let totalDifference = 0;
 
   transactions.forEach((transaction, index) => {
     // Filter transactions for today's date
@@ -22,8 +24,18 @@ const generatePDF = transactions => {
             Property: key,
             Value: transaction[key],
           });
+
+          // Calculate total for CashAsPerMeter and Difference
+          if (key === "cashAsPerMeter") {
+            totalCashAsPerMeter += transaction[key];
+          }
+          if (key === "difference") {
+            totalDifference += transaction[key];
+          }
         }
       }
+
+      const sales = (totalCashAsPerMeter * 1) - (totalDifference * 1);
 
       const rows = tableData.map(column => Object.values(column));
       const tableColumns = ["Property", "Value"];
@@ -32,16 +44,23 @@ const generatePDF = transactions => {
         doc.addPage(); // Add a new page for each subsequent transaction
       } else {
         isFirstPage = false;
+
+        // Add total sales at the top of the first page
+        doc.text(
+          `Total Sales: ${sales}`,
+          14,
+          15
+        );
       }
 
       doc.autoTable({
         head: [tableColumns],
         body: rows,
-        startY: 20,
+        startY: 35, // Adjusted startY to leave space for the total sales message
       });
 
       // Add a title for each transaction
-      doc.text(`Transaction ${index + 1} Report`, 14, 15);
+      doc.text(`Transaction ${index + 1} Report`, 14, 25);
     }
   });
 

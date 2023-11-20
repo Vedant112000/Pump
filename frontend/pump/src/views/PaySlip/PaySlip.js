@@ -3,6 +3,7 @@ import './PaySlip.css';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import DynamicInput from '../DynamicInput/DynamicInput';
 
 const PaySlip = () => {
 
@@ -607,15 +608,8 @@ const PaySlip = () => {
               />
             </div>
 
-            <div className="form-group">
-              <label>Total Credit Amount:</label>
-              <input
-                type="number"
-                className="form-control"
-                name="CreditAmount"
-                value={formData.CreditAmount}  
-                onChange={handleInputChange}
-              />
+            <div>
+              <DynamicInput />
             </div>
 
             <button type="submit" id='paySlipSubmitBtn' className="btn btn-primary" style={{marginTop: 15}}>Submit</button>
