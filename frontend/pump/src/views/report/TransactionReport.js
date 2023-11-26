@@ -29,7 +29,7 @@ const TransactionReport = () => {
                 className="btn btn-primary"
                 onClick={() => generatePDF(tickets)}
               >
-                Generate Daily report
+                Generate Transaction report for Today!
               </button>
           </div>
         </div>

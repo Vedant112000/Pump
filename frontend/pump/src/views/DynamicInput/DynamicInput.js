@@ -1,89 +1,119 @@
-import React, { useState } from 'react';
-import "./DynamicInput.css"
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
-import { FaPlus } from "@react-icons/all-files/fa/FaPlus";
 
 const DynamicInput = () => {
 
-    const[creditors, setCreditors] = useState([{
-        name: "",
-        fuelType: "",
-        fuelAmount: 0,
-        Litres: 0,
+    //got creditors data 
 
+    const [creditor, setCreditor] = useState([]);
+
+    useEffect(() => {
+        fetchCreditor();
+    },[])
+
+    const fetchCreditor = () => {
+        axios.get('http://localhost:5000/creditor/get')
+        .then(response => {
+            setCreditor(response.data.data);
+        })
+        .catch(error => {
+            console.error(error);
+        })
+    }
+
+
+    //created a array of object to store data of creditors for specific transaction
+
+    const [creditorDetails, setCreditorDetails] = useState([{
+        name: "",
+        fuelAmount: 0,
+        fuelType: "",
+        Litres: 0,
     }]);
 
-    const handleInputChange = (e,index) => {
+
+    //created a function that store values in the object on change of input
+
+    const handleChange = (e,index) => {
         const {name, value} = e.target;
-        const list = [...creditors];
+        const list = [...creditorDetails];
         list[index,name] = value;
-
-        setCreditors(list);
+        setCreditorDetails(list);
     }
 
-    const handleAdd = () => {
-        setCreditors([...creditors, {name: creditors.name, fuelType: creditors.fuelType, fuelAmount: creditors.fuelAmount, Litres: creditors.Litres}]);
+    console.log(creditorDetails);
+
+
+    //created a function to handle add button
+
+    const handleadd = () => {
+        setCreditorDetails([...creditorDetails, {name: "",fuelAmount: 0,fuelType: "",Litres: 0,}]);
     }
 
-    const handleRemove = (index) => {
-        const list = [...creditors];
-        list.splice(index,1);
+    const handleremove = (i) => {
+        const list = [...creditorDetails];
+        list.splice(i,1);
+        setCreditorDetails(list);
     }
 
   return (
-    <div className='Container'>
-        <div>
-        <label>Add Creditors: </label>
-        </div>
-    {
-        creditors.map( (x,i) =>{
-        return(
-        <div>
-            <label>Creditor Name: </label>
-            <select name='name' value={creditors.name} onChange={(e) => handleInputChange(e,i)}>
-                <option disabled>Select any creditor below:</option>
-                <option name='name' value={x.name}>{creditors.name}</option>
-            </select>
-
-            <label>Fuel Type: </label>
-            <select name='fuelType' value={x.fuelType} onChange={(e) => handleInputChange(e,i)}>
-                <option disabled>Select any creditor below:</option>
-                <option value='Hsd'>Hsd</option>
-                <option value='Ms'>Ms</option>
-            </select>
-            
-           
-            <label>Fuel Amount: </label>
-            <input type='number' placeholder='Enter the amount of Fuel Filled.' name='fuelAmount' value={x.fuelAmount} onChange={(e) => handleInputChange(e,i)} />
-
-
-            <label>Litres Filled: </label>
-            <input type='number' value={x.Litres} />
-
-            
-
-            <div style={{marginTop: 10}}>
-                {/* on every button hit there should be an api call to store the creditor data */}
-                {
-                    creditors.length !== 1 &&
-                    <Button className='danger' onClick={() => handleRemove(i)}>Remove Creditors</Button>
-
-                }
-                {
-                    creditors.length-1 === i &&
-                    <Button className='primary' onClick={handleAdd()}><FaPlus style={{marginRight: 5}}/>Add More Creditors</Button>
-                }
-            </div>
-
-               
-
-        </div>
+    <div>
+        {
+            creditorDetails.map((z,i) => {
+                return(
+                    <>
+                    <label>
+                        Creditor Name:
+                    </label>
+                    
+                    <select name='name' value={i.name} onChange={(e) => handleChange(e,i)}>
+                        <option>Select any creditor of below.</option>
+                        {
+                            creditor.map((x,index) => {
+                                return(
+                                <option key={index} name="name" value={x.name}>
+                                    {x.name}
+                                </option>
+                                )
+                            })
+                        }
+                    </select>
         
-            
-        );
-    } )}
-
+                    <label>
+                        Fuel Amount: 
+                    </label>
+                    <input type='number' name='fuelAmount' value={i.fuelAmount} onChange={(e) => handleChange(e,i)}/>
         
+                    <label>
+                        Fuel Type:
+                    </label>
+                    <select name='fuelType' value={i.fuelType} onChange={(e)=> handleChange(e,i)}>
+                        <option>Select the below option.</option>
+                        <option value='Hsd'>Hsd</option>
+                        <option value='Ms'>Ms</option>
+                    </select>
+        
+                    <label>
+                        Fuel in Litres:
+                    </label>
+                    <input type='number' value={i.Litres} onChange={(e)=> handleChange(e,i)}/>
+                
+                    <div style={{marginTop: 10}}>
+                        {
+                            creditorDetails.length !== 1 &&
+                            <Button className="btn btn-danger" onClick={()=> handleremove(i)} style={{marginRight:10}}>Remove</Button>
+                        }
+                        {
+                            creditorDetails.length-1 === i &&
+                            <Button className="btn btn-success" onClick={handleadd}>Add Creditors</Button>
+                        }
+                        
+                    </div>
+                    </>
+                )
+                    })
+           }
     </div>
   )
 }

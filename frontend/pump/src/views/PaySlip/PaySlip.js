@@ -4,6 +4,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import DynamicInput from '../DynamicInput/DynamicInput';
+import DynamicExpenses from '../DynamicInput/DynamicExpenses';
 
 const PaySlip = () => {
 
@@ -172,7 +173,9 @@ const PaySlip = () => {
         try{
           if(window.confirm("are you sure you want to create this slip check once before submitting")){
           const response = await axios.post('http://localhost:5000/collections/addCollection', data);
+          const latestTransaction = await axios.get('http://localhost:5000/collections/getLatestTransaction');
           console.log(response);
+          console.log(latestTransaction.data.data[0].TransactionId);
           }
           else{
             navigate("/");
@@ -610,6 +613,9 @@ const PaySlip = () => {
 
             <div>
               <DynamicInput />
+            </div>
+            <div>
+              <DynamicExpenses />
             </div>
 
             <button type="submit" id='paySlipSubmitBtn' className="btn btn-primary" style={{marginTop: 15}}>Submit</button>
