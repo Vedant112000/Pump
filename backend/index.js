@@ -20,7 +20,7 @@ app.use("/users",userRoutes)
 app.use("/collections", dailyCollection)
 //build the server
 
-app.listen(5000, () => {
+app.listen(5000, '0.0.0.0', () => {
   console.log("server is up and running");
 })
 
